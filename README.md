@@ -22,18 +22,18 @@
 
 | 文件 | 用途 |
 |---|---|
-| `jdbeanbot-win-1.0.1.zip` | Windows 便携版（约 54 MB） |
-| `jdbeanbot-1.0.1.fpk` | 飞牛 fnOS 安装包（约 60 MB） |
-| `jdbeanbot-kernel-1.0.1.tar.gz` | 飞牛内核升级包（自升级用，一般不必手动下载） |
+| `jdbeanbot-win-1.0.2.zip` | Windows 便携版（约 54 MB） |
+| `jdbeanbot-1.0.2.fpk` | 飞牛 fnOS 安装包（约 60 MB） |
+| `jdbeanbot-kernel-1.0.2.tar.gz` | 飞牛内核升级包（自升级用，一般不必手动下载） |
 | `*.sha256` | 每个包的校验和，**建议一起下载** |
 
 校验（可选但推荐）：
 
 ```bash
 # Linux / macOS
-sha256sum -c jdbeanbot-win-1.0.1.zip.sha256
+sha256sum -c jdbeanbot-win-1.0.2.zip.sha256
 # Windows PowerShell
-(Get-FileHash .\jdbeanbot-win-1.0.1.zip -Algorithm SHA256).Hash
+(Get-FileHash .\jdbeanbot-win-1.0.2.zip -Algorithm SHA256).Hash
 # 与 .sha256 文件里的值比对
 ```
 
@@ -43,7 +43,7 @@ sha256sum -c jdbeanbot-win-1.0.1.zip.sha256
 
 ### 安装
 
-1. 把 `jdbeanbot-win-1.0.1.zip` 解压到任意目录（路径别太长，别放需要管理员权限的位置）；
+1. 把 `jdbeanbot-win-1.0.2.zip` 解压到任意目录（路径别太长，别放需要管理员权限的位置）；
 2. 双击 **`start.bat`**；
 3. 浏览器会自动打开 <http://127.0.0.1:3000>；
 4. **首次进入请先设置一个控制台密码**（见下面的「安全」）。
@@ -83,7 +83,7 @@ JDBeanBot\
 
 **方式 A：应用中心（推荐）**
 
-应用中心 → 右上角「手动安装」→ 选择 `jdbeanbot-1.0.1.fpk` → 按向导填写**控制台登录密码** → 安装。
+应用中心 → 右上角「手动安装」→ 选择 `jdbeanbot-1.0.2.fpk` → 按向导填写**控制台登录密码** → 安装。
 
 安装完成后，飞牛桌面会出现「京东轻量京豆」图标，点开即进入控制台；
 也可直接访问 `http://<NAS的IP>:3000`。
@@ -91,9 +91,9 @@ JDBeanBot\
 **方式 B：命令行**
 
 ```bash
-sudo appcenter-cli install-fpk jdbeanbot-1.0.1.fpk -v 1
+sudo appcenter-cli install-fpk jdbeanbot-1.0.2.fpk -v 1
 # 想跳过安装向导的密码设置，可先准备一个 env 文件再 -e 传入：
-# sudo appcenter-cli install-fpk jdbeanbot-1.0.1.fpk -e /tmp/app-env -v 1
+# sudo appcenter-cli install-fpk jdbeanbot-1.0.2.fpk -e /tmp/app-env -v 1
 # /tmp/app-env 内容：wizard_console_password=你的密码
 ```
 
@@ -212,7 +212,7 @@ Windows 端为什么要多一步：`runtime\node.exe` 正在运行，**自己覆
 
 ### 发布方需要遵守的约定
 
-打一个 tag（如 `v1.0.1`），并上传这些资产：
+打一个 tag（如 `v1.0.2`），并上传这些资产：
 
 | 资产名 | 必需 |
 |---|---|
@@ -301,7 +301,7 @@ Windows 端为什么要多一步：`runtime\node.exe` 正在运行，**自己覆
 
 ```bash
 # 1. 改版本号（唯一来源）
-echo 1.0.1 > app/VERSION
+echo 1.0.2 > app/VERSION
 
 # 2. 全量测试（会起独立服务与独立数据目录，不碰真实数据）
 cd app && node _run-all.js
