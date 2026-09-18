@@ -1,0 +1,12 @@
+# 成品包不进仓库，一律走 Releases
+dist/
+build/
+cache/
+*.zip
+*.fpk
+*.tar.gz
+*.sha256
+
+# 本地临时产物
+_nas-*.sh
+*.log
