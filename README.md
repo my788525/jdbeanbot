@@ -22,9 +22,9 @@
 
 | 文件 | 用途 |
 |---|---|
-| `jdbeanbot-win-1.0.5.zip` | Windows 便携版（约 54 MB） |
-| `jdbeanbot-1.0.5.fpk` | 飞牛 fnOS 安装包（约 60 MB） |
-| `jdbeanbot-kernel-1.0.5.tar.gz` | 飞牛内核升级包（自升级用，一般不必手动下载） |
+| `jdbeanbot-win-1.0.6.zip` | Windows 便携版（约 54 MB） |
+| `jdbeanbot-1.0.6.fpk` | 飞牛 fnOS 安装包（约 60 MB） |
+| `jdbeanbot-kernel-1.0.6.tar.gz` | 飞牛内核升级包（自升级用，一般不必手动下载） |
 | `*.sha256` | 每个包的校验和，**建议一起下载** |
 | `SHA256SUMS.txt` | 三个包的校验和汇总 |
 
@@ -32,9 +32,9 @@
 
 ```bash
 # Linux / macOS
-sha256sum -c jdbeanbot-win-1.0.5.zip.sha256
+sha256sum -c jdbeanbot-win-1.0.6.zip.sha256
 # Windows PowerShell
-(Get-FileHash .\jdbeanbot-win-1.0.5.zip -Algorithm SHA256).Hash
+(Get-FileHash .\jdbeanbot-win-1.0.6.zip -Algorithm SHA256).Hash
 # 与 .sha256 文件里的值比对
 ```
 
@@ -44,7 +44,7 @@ sha256sum -c jdbeanbot-win-1.0.5.zip.sha256
 
 ### 2.1 三步跑起来
 
-1. 把 `jdbeanbot-win-1.0.5.zip` 解压到任意目录。解压出来是一个 **`JDBeanBot` 文件夹**，
+1. 把 `jdbeanbot-win-1.0.6.zip` 解压到任意目录。解压出来是一个 **`JDBeanBot` 文件夹**，
    整个文件夹就是应用本体，可以随便挪、随便拷贝。
    - **别放在需要管理员权限才能写入的位置**（如 `C:\Program Files`）——升级要覆盖 `app\`；
    - **路径别太长**，且**中间别有怪字符**（全角引号、emoji 之类会让 .bat 出问题）；
@@ -69,7 +69,7 @@ netstat -ano | findstr ":3100"
 
 ### 2.3 想让局域网其它设备访问（防火墙放行）
 
-服务默认监听 `0.0.0.0`（局域网可访问），但 Windows 防火墙可能拦截入站。
+服务默认双栈监听 `::`（IPv4+IPv6，局域网与外网均可访问），但 Windows 防火墙可能拦截入站。
 以**管理员身份**运行一次：
 
 ```bat
@@ -98,7 +98,7 @@ setx HOST 127.0.0.1
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `PORT` | `3100` | 控制台端口 |
-| `HOST` | `0.0.0.0` | 改 `127.0.0.1` = 只允许本机访问 |
+| `HOST` | `::`（双栈） | 改 `127.0.0.1` = 只允许本机访问 |
 | `NO_BROWSER` | 空 | 设 `1` = 启动时不自动弹浏览器（**开机自启时务必设**，否则每次开机弹一个网页） |
 | `CONSOLE_AUTH` | 开启 | 设 `0` 关闭登录门禁（仅在完全可信的内网用） |
 | `DATA_DIR` | `<应用目录>\data` | 数据目录，可重定向到别的盘 |
@@ -167,7 +167,7 @@ start.bat
 
 ### 3.1 应用中心安装（推荐，全程图形界面）
 
-1. 飞牛桌面 → **应用中心** → 右上角 **「手动安装」** → 选择 `jdbeanbot-1.0.5.fpk`；
+1. 飞牛桌面 → **应用中心** → 右上角 **「手动安装」** → 选择 `jdbeanbot-1.0.6.fpk`；
 2. 按向导填写：**控制台登录密码**（其它项保持默认即可）；
 3. 等待安装完成，桌面会出现「京东轻量京豆」图标；
 4. 点图标进入控制台，或直接访问 `http://<NAS的IP>:3100`。
@@ -179,13 +179,13 @@ ssh admin@<NAS的IP>
 sudo -i   # 输入 admin 的密码
 
 # 方式一：直接装（安装过程中会走向导问密码）
-sudo appcenter-cli install-fpk /path/to/jdbeanbot-1.0.5.fpk -v 1
+sudo appcenter-cli install-fpk /path/to/jdbeanbot-1.0.6.fpk -v 1
 
 # 方式二：先准备向导参数文件，跳过交互（适合脚本化）
 cat > /tmp/app-env <<'EOF'
 wizard_console_password=你的控制台密码
 EOF
-sudo appcenter-cli install-fpk /path/to/jdbeanbot-1.0.5.fpk -e /tmp/app-env -v 1
+sudo appcenter-cli install-fpk /path/to/jdbeanbot-1.0.6.fpk -e /tmp/app-env -v 1
 rm -f /tmp/app-env    # 装完删掉，别把密码留在 /tmp
 ```
 
@@ -242,7 +242,7 @@ sudo /var/apps/jdbeanbot/target/cmd/main import <归档.tar.gz>
 ```bash
 sudo appcenter-cli stop jdbeanbot
 sudo appcenter-cli uninstall jdbeanbot
-sudo appcenter-cli install-fpk /path/to/jdbeanbot-1.0.5.fpk -e /tmp/app-env -v 1
+sudo appcenter-cli install-fpk /path/to/jdbeanbot-1.0.6.fpk -e /tmp/app-env -v 1
 sudo appcenter-cli start jdbeanbot
 ```
 
@@ -337,7 +337,7 @@ Cookie 真的失效后不再每轮全量空跑（白耗时间、还持续叠风�
 任何一步校验不过，就一个字都不写。升级前旧代码备份到 `data/.update/backup-<旧版本>/`，
 升级后起不来，在控制台点「回滚」即可（同样需要一次重启）。
 
-> **国内网络增强（v1.0.5 起）**：实测经常出现「api.github.com 可达（检查正常）、
+> **国内网络增强（v1.0.6 起）**：实测经常出现「api.github.com 可达（检查正常）、
 > 但 releases 下载域不通」——症状是检查说有新版本、下载永远失败。
 > 现在下载会**先直连、失败自动走镜像**（默认 `ghfast.top`，可用 `UPDATE_MIRROR` 换或设空禁用）。
 > 镜像只负责搬运字节：下载结果仍要过 **sha256 校验和** + **GitHub API 声明的文件大小**两道关，
@@ -373,7 +373,7 @@ UPDATE_INTERVAL_HOURS=6  # 改检查频率
 
 ### 发布方需要遵守的约定
 
-打一个 tag（如 `v1.0.5`），并上传这些资产：
+打一个 tag（如 `v1.0.6`），并上传这些资产：
 
 | 资产名 | 必需 |
 |---|---|
@@ -391,7 +391,7 @@ UPDATE_INTERVAL_HOURS=6  # 改检查频率
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `PORT` | `3100` | 控制台端口 |
-| `HOST` | `0.0.0.0` | 监听地址；改 `127.0.0.1` 只允许本机访问 |
+| `HOST` | `::`（双栈） | 监听地址；改 `127.0.0.1` 只允许本机访问 |
 | `NO_BROWSER` | 空 | Windows 端设 `1` = 启动不弹浏览器（自启场景建议） |
 | `DATA_DIR` | `<应用目录>/data` | 数据目录，可重定向到别的盘 |
 | `CONSOLE_AUTH` | 开启 | 设 `0` 关闭登录门禁（**仅在完全可信的内网里用**） |
@@ -424,7 +424,7 @@ UPDATE_INTERVAL_HOURS=6  # 改检查频率
 
 ## 八、安全与隐私
 
-- **服务默认监听 `0.0.0.0`**，也就是**同一局域网内任何设备都能打开这个控制台**；
+- **服务默认双栈监听（`::`，IPv4+IPv6）**，也就是**同一局域网内任何设备都能打开这个控制台**；
 - `accounts.json` 里存着京东 Cookie **明文**，谁拿到都能顶你的号领豆；
 - 所以：**务必设置控制台密码**，或者把 `HOST` 改成 `127.0.0.1`；
 - 数据只存在本机（`data/` 目录）。本工具**不上传任何数据到第三方**；
@@ -476,7 +476,7 @@ GitHub 匿名请求限流（按 IP 计）。给 `UPDATE_TOKEN` 配一个免费�
 
 ```bash
 # 1. 改版本号（唯一来源）
-echo 1.0.5 > app/VERSION
+echo 1.0.6 > app/VERSION
 
 # 2. 全量测试（独立服务 + 独立数据目录，不碰真实数据；12 套约 1200 断言）
 cd app && node _run-all.js
